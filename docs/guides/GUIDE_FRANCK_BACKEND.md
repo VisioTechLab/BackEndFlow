@@ -1,17 +1,17 @@
-# Guide Backend pour Franck — LEYISA SCHOOL MVP
+ï»¿# Guide Backend pour Franck â€” LEYISA SCHOOL MVP
 
 ---
 
 ## 1. Objectif du guide
 
-Ce guide t'aide à contribuer au backend LEYISA SCHOOL **sans te perdre** et **sans casser l'architecture**.
+Ce guide t'aide Ã  contribuer au backend LEYISA SCHOOL **sans te perdre** et **sans casser l'architecture**.
 
 Points importants :
 
-- L'**architecture** est déjà validée (`docs/architecture/ARCHITECTURE_BACKEND_MVP.md`).
-- La **BDD MVP** est déjà validée (`database/leyisa_mvp.sql`).
+- L'**architecture** est dÃ©jÃ  validÃ©e (`docs/architecture/ARCHITECTURE_BACKEND_MVP.md`).
+- La **BDD MVP** est dÃ©jÃ  validÃ©e (`database/leyisa_mvp.sql`).
 - Tu **ne dois pas modifier la conception** (architecture, SQL) sans validation de Kevin.
-- Ton rôle : aider sur les **parties simples**, les **tests Postman**, les **fixtures** et la **documentation**.
+- Ton rÃ´le : aider sur les **parties simples**, les **tests Postman**, les **fixtures** et la **documentation**.
 
 Si tu as un doute, **demande avant de coder**.
 
@@ -19,30 +19,30 @@ Si tu as un doute, **demande avant de coder**.
 
 ## 2. Rappel du MVP
 
-Le cœur du MVP est cette chaîne métier :
+Le cÅ“ur du MVP est cette chaÃ®ne mÃ©tier :
 
 ```text
-inscrire -> enseigner -> noter -> publier -> archiver -> réimprimer
+inscrire -> enseigner -> noter -> publier -> archiver -> rÃ©imprimer
 ```
 
-Modules **hors MVP — interdits pour l'instant** :
+Modules **hors MVP â€” interdits pour l'instant** :
 
 ```text
 parents
 paiements
-présences
+prÃ©sences
 notifications SMS/WhatsApp
 portail parent
-portail élève
+portail Ã©lÃ¨ve
 QR code complet
 microservices
 ```
 
-Ne les ajoute pas, même « pour tester ».
+Ne les ajoute pas, mÃªme Â« pour tester Â».
 
 ---
 
-## 3. Architecture officielle à respecter
+## 3. Architecture officielle Ã  respecter
 
 Arborescence officielle :
 
@@ -57,23 +57,23 @@ src/
   Shared/
 ```
 
-Rôle de chaque domaine :
+RÃ´le de chaque domaine :
 
 ```text
 Ecole       = tenant / client SaaS
 Utilisateur = auth, utilisateurs, professeurs
-Scolarite   = année, classe, élève, inscription
-Pedagogie   = matière, période, enseignement, évaluation, note
+Scolarite   = annÃ©e, classe, Ã©lÃ¨ve, inscription
+Pedagogie   = matiÃ¨re, pÃ©riode, enseignement, Ã©valuation, note
 Publication = publication, bulletin, archive
 Audit       = trace des actions sensibles
-Shared      = éléments communs : TenantContext, exceptions, enums
+Shared      = Ã©lÃ©ments communs : TenantContext, exceptions, enums
 ```
 
 Chaque domaine contient des sous-dossiers : `Controller/`, `Entity/`, `Repository/`, `Service/`, `DTO/` (et parfois `Security/`).
 
 ---
 
-## 4. Règle de code obligatoire
+## 4. RÃ¨gle de code obligatoire
 
 Couches strictes :
 
@@ -81,39 +81,39 @@ Couches strictes :
 Controller -> Service -> Repository -> Entity
 ```
 
-Définitions simples :
+DÃ©finitions simples :
 
 ```text
-Controller = reçoit la requête API
-Service    = applique la règle métier
+Controller = reÃ§oit la requÃªte API
+Service    = applique la rÃ¨gle mÃ©tier
 Repository = interroge la BDD
-Entity     = représente la table
-DTO        = contrôle les données reçues
+Entity     = reprÃ©sente la table
+DTO        = contrÃ´le les donnÃ©es reÃ§ues
 ```
 
-**Règle stricte :** tu ne mets **pas** la logique métier directement dans un Controller.
+**RÃ¨gle stricte :** tu ne mets **pas** la logique mÃ©tier directement dans un Controller.
 
 Exemple correct :
 
 ```text
 Controller -> valide le DTO -> appelle MatiereService -> retourne JSON
-Service    -> vérifie les règles -> appelle le Repository
+Service    -> vÃ©rifie les rÃ¨gles -> appelle le Repository
 Repository -> findOneByIdAndEcole(...)
 ```
 
 Exemple incorrect :
 
 ```text
-Controller -> calcule les totaux, bloque les notes, écrit en BDD directement
+Controller -> calcule les totaux, bloque les notes, Ã©crit en BDD directement
 ```
 
 ---
 
-## 5. Règle SaaS obligatoire
+## 5. RÃ¨gle SaaS obligatoire
 
-LEYISA SCHOOL est un SaaS : **1 école = 1 client (tenant)**.
+LEYISA SCHOOL est un SaaS : **1 Ã©cole = 1 client (tenant)**.
 
-Règles :
+RÃ¨gles :
 
 ```text
 id_ecole ne vient jamais du JSON client.
@@ -126,14 +126,14 @@ id_ecole vient toujours du TenantContext.
 $repository->find($id);
 ```
 
-**Préférer :**
+**PrÃ©fÃ©rer :**
 
 ```php
 $repository->findOneByIdAndEcole($id, $ecole);
 ```
 
-Toute donnée créée doit appartenir à **l'école connectée**.  
-Avant une écriture liée (inscription, enseignement, note…), Kevin validera l'usage de `TenantCoherenceValidator`.
+Toute donnÃ©e crÃ©Ã©e doit appartenir Ã  **l'Ã©cole connectÃ©e**.  
+Avant une Ã©criture liÃ©e (inscription, enseignement, noteâ€¦), Kevin validera l'usage de `TenantCoherenceValidator`.
 
 ---
 
@@ -143,14 +143,14 @@ Avant une écriture liée (inscription, enseignement, note…), Kevin validera l'usa
 | --------------------------------------- | ------------------------- | ------------------------------- |
 | `docs/guides/` | Oui | Documentation |
 | `docs/postman/` | Oui | Tests API |
-| `src/Scolarite/Controller/` | Oui plus tard | CRUD simples validés |
+| `src/Scolarite/Controller/` | Oui plus tard | CRUD simples validÃ©s |
 | `src/Scolarite/DTO/` | Oui plus tard | DTO simples |
-| `src/Scolarite/Service/` | Oui avec validation Kevin | Pas de règle sensible seul |
+| `src/Scolarite/Service/` | Oui avec validation Kevin | Pas de rÃ¨gle sensible seul |
 | `src/Pedagogie/Controller/` | Oui plus tard | Matiere, Periode simples |
 | `src/Pedagogie/DTO/` | Oui plus tard | DTO simples |
 | `database/leyisa_mvp.sql` | Non | Seulement avec validation Kevin |
 | `src/Shared/Tenant/` | Non seul | Partie sensible SaaS |
-| `src/Utilisateur/Security/` | Non seul | Sécurité JWT |
+| `src/Utilisateur/Security/` | Non seul | SÃ©curitÃ© JWT |
 | `src/Publication/Service/` | Non seul | Bulletin/archive sensible |
 | `src/Pedagogie/Service/NoteService.php` | Non seul | Blocage note sensible |
 
@@ -163,7 +163,7 @@ database/leyisa_mvp.sql
 docs/architecture/ARCHITECTURE_BACKEND_MVP.md
 TenantContext
 TenantCoherenceValidator
-JWT / sécurité
+JWT / sÃ©curitÃ©
 NoteService
 PublicationService
 BulletinCalculService
@@ -172,11 +172,11 @@ AuditLogService
 Migrations Doctrine
 ```
 
-Ces fichiers sont **sensibles**. Toute modification doit être **validée avec Kevin** avant commit.
+Ces fichiers sont **sensibles**. Toute modification doit Ãªtre **validÃ©e avec Kevin** avant commit.
 
 ---
 
-## 8. Les tâches adaptées à Franck
+## 8. Les tÃ¢ches adaptÃ©es Ã  Franck
 
 Tu peux aider sur :
 
@@ -186,24 +186,24 @@ DTO simples
 fixtures
 tests Postman
 documentation
-captures de résultats
-vérification des erreurs
+captures de rÃ©sultats
+vÃ©rification des erreurs
 ```
 
-Exemples de tâches adaptées :
+Exemples de tÃ¢ches adaptÃ©es :
 
 ```text
-Créer la documentation d'un endpoint
-Préparer une collection Postman
+CrÃ©er la documentation d'un endpoint
+PrÃ©parer une collection Postman
 Tester un CRUD
-Documenter les réponses JSON
-Créer des fixtures simples
-Vérifier qu'un professeur n'accède pas à une autre école
+Documenter les rÃ©ponses JSON
+CrÃ©er des fixtures simples
+VÃ©rifier qu'un professeur n'accÃ¨de pas Ã  une autre Ã©cole
 ```
 
 ---
 
-## 9. Exemple de tâche : CRUD Matiere
+## 9. Exemple de tÃ¢che : CRUD Matiere
 
 **Domaine :**
 
@@ -221,26 +221,26 @@ CreateMatiereRequest
 UpdateMatiereRequest
 ```
 
-**Règles :**
+**RÃ¨gles :**
 
 ```text
-Une matière appartient à une école.
-Deux matières ne doivent pas avoir le même nom dans une même école.
+Une matiÃ¨re appartient Ã  une Ã©cole.
+Deux matiÃ¨res ne doivent pas avoir le mÃªme nom dans une mÃªme Ã©cole.
 id_ecole vient du TenantContext.
 ```
 
 **Tests Postman :**
 
 ```text
-Admin crée une matière -> 201
-Admin crée une matière déjà existante -> 409
-Professeur crée une matière -> 403
-id_ecole envoyé dans JSON -> ignoré ou refusé
+Admin crÃ©e une matiÃ¨re -> 201
+Admin crÃ©e une matiÃ¨re dÃ©jÃ  existante -> 409
+Professeur crÃ©e une matiÃ¨re -> 403
+id_ecole envoyÃ© dans JSON -> ignorÃ© ou refusÃ©
 ```
 
 ---
 
-## 10. Exemple de tâche : CRUD Eleve
+## 10. Exemple de tÃ¢che : CRUD Eleve
 
 **Domaine :**
 
@@ -258,38 +258,38 @@ CreateEleveRequest
 UpdateEleveRequest
 ```
 
-**Règles :**
+**RÃ¨gles :**
 
 ```text
-Un élève appartient à une école.
-Le matricule élève est obligatoire.
-Deux élèves ne doivent pas avoir le même matricule dans une même école.
+Un Ã©lÃ¨ve appartient Ã  une Ã©cole.
+Le matricule Ã©lÃ¨ve est obligatoire.
+Deux Ã©lÃ¨ves ne doivent pas avoir le mÃªme matricule dans une mÃªme Ã©cole.
 id_ecole vient du TenantContext.
 ```
 
 **Tests Postman :**
 
 ```text
-Admin crée élève -> 201
-Matricule déjà utilisé -> 409
-Professeur crée élève -> 403
-Lecture élève autre école -> 404 ou 403
+Admin crÃ©e Ã©lÃ¨ve -> 201
+Matricule dÃ©jÃ  utilisÃ© -> 409
+Professeur crÃ©e Ã©lÃ¨ve -> 403
+Lecture Ã©lÃ¨ve autre Ã©cole -> 404 ou 403
 ```
 
 ---
 
 ## 11. Format de documentation Postman
 
-Utilise ce modèle pour chaque test :
+Utilise ce modÃ¨le pour chaque test :
 
 ```text
 Endpoint :
-Méthode :
-Rôle autorisé :
+MÃ©thode :
+RÃ´le autorisÃ© :
 Body JSON :
-Résultat attendu :
-Résultat obtenu :
-Statut : OK / À corriger
+RÃ©sultat attendu :
+RÃ©sultat obtenu :
+Statut : OK / Ã€ corriger
 Capture :
 Commentaire :
 ```
@@ -298,49 +298,49 @@ Exemple :
 
 ```text
 Endpoint : /api/v1/matieres
-Méthode : POST
-Rôle autorisé : ADMIN_ECOLE
-Body JSON : { "designation": "Mathématiques", "maxPeriode": 10, "maxExamen": 20 }
-Résultat attendu : 201 Created
-Résultat obtenu : 201 Created
+MÃ©thode : POST
+RÃ´le autorisÃ© : ADMIN_ECOLE
+Body JSON : { "designation": "MathÃ©matiques", "maxPeriode": 10, "maxExamen": 20 }
+RÃ©sultat attendu : 201 Created
+RÃ©sultat obtenu : 201 Created
 Statut : OK
 Capture : (joindre capture Postman)
-Commentaire : Matière créée avec succès, id_ecole non envoyé dans le body.
+Commentaire : MatiÃ¨re crÃ©Ã©e avec succÃ¨s, id_ecole non envoyÃ© dans le body.
 ```
 
 ---
 
-## 12. Checklist avant de dire « j'ai fini »
+## 12. Checklist avant de dire Â« j'ai fini Â»
 
-Vérifie :
+VÃ©rifie :
 
 ```text
 Le fichier est dans le bon dossier.
 Le nom respecte le lexique officiel.
-Le Controller ne contient pas de logique métier.
-Le Service applique la règle.
-Le Repository filtre par école.
-id_ecole n'est pas accepté depuis le JSON.
-Le password_hash n'est jamais retourné.
-Le cas normal est testé.
-Le cas erreur est testé.
-Le cas autre école est testé.
-Le résultat est documenté.
+Le Controller ne contient pas de logique mÃ©tier.
+Le Service applique la rÃ¨gle.
+Le Repository filtre par Ã©cole.
+id_ecole n'est pas acceptÃ© depuis le JSON.
+Le password_hash n'est jamais retournÃ©.
+Le cas normal est testÃ©.
+Le cas erreur est testÃ©.
+Le cas autre Ã©cole est testÃ©.
+Le rÃ©sultat est documentÃ©.
 ```
 
 ---
 
-## 13. Règle Git pour Franck
+## 13. RÃ¨gle Git pour Franck
 
 ```text
 Toujours faire git status avant de modifier.
 Ne jamais travailler directement sur main.
-Faire une branche claire si demandé.
+Faire une branche claire si demandÃ©.
 Faire un commit petit et propre.
-Ne pas mélanger code, SQL et documentation dans le même commit sans raison.
+Ne pas mÃ©langer code, SQL et documentation dans le mÃªme commit sans raison.
 ```
 
-Branche de travail actuelle : **`Feat_Kev_and_Franck`** (ou une branche feature dédiée si Kevin le demande).
+Branche de travail actuelle : **`Feat_Kev_and_Franck`** (ou une branche feature dÃ©diÃ©e si Kevin le demande).
 
 Exemples de messages de commit :
 
@@ -356,8 +356,8 @@ fix: validate duplicate eleve matricule
 ## 14. Phrase finale pour Franck
 
 > Le but n'est pas de coder vite. Le but est de coder proprement sans casser l'architecture MVP.  
-> Si tu ne sais pas où mettre un fichier, demande avant de coder.
+> Si tu ne sais pas oÃ¹ mettre un fichier, demande avant de coder.
 
 ---
 
-*Guide LEYISA SCHOOL MVP — Franck & Kevin — branche `Feat_Kev_and_Franck`*
+*Guide LEYISA SCHOOL MVP â€” Franck & Kevin â€” branche `Feat_Kev_and_Franck`*
