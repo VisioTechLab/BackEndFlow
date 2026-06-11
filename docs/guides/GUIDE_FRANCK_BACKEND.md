@@ -22,7 +22,7 @@ Si tu as un doute, **demande avant de coder**.
 Le cœur du MVP est cette chaîne métier :
 
 ```text
-inscrire ? enseigner ? noter ? publier ? archiver ? réimprimer
+inscrire -> enseigner -> noter -> publier -> archiver -> réimprimer
 ```
 
 Modules **hors MVP — interdits pour l'instant** :
@@ -78,7 +78,7 @@ Chaque domaine contient des sous-dossiers : `Controller/`, `Entity/`, `Repositor
 Couches strictes :
 
 ```text
-Controller ? Service ? Repository ? Entity
+Controller -> Service -> Repository -> Entity
 ```
 
 Définitions simples :
@@ -96,15 +96,15 @@ DTO        = contrôle les données reçues
 Exemple correct :
 
 ```text
-Controller ? valide le DTO ? appelle MatiereService ? retourne JSON
-Service    ? vérifie les règles ? appelle le Repository
-Repository ? findOneByIdAndEcole(...)
+Controller -> valide le DTO -> appelle MatiereService -> retourne JSON
+Service    -> vérifie les règles -> appelle le Repository
+Repository -> findOneByIdAndEcole(...)
 ```
 
 Exemple incorrect :
 
 ```text
-Controller ? calcule les totaux, bloque les notes, écrit en BDD directement
+Controller -> calcule les totaux, bloque les notes, écrit en BDD directement
 ```
 
 ---
@@ -232,10 +232,10 @@ id_ecole vient du TenantContext.
 **Tests Postman :**
 
 ```text
-Admin crée une matière ? 201
-Admin crée une matière déjà existante ? 409
-Professeur crée une matière ? 403
-id_ecole envoyé dans JSON ? ignoré ou refusé
+Admin crée une matière -> 201
+Admin crée une matière déjà existante -> 409
+Professeur crée une matière -> 403
+id_ecole envoyé dans JSON -> ignoré ou refusé
 ```
 
 ---
@@ -270,10 +270,10 @@ id_ecole vient du TenantContext.
 **Tests Postman :**
 
 ```text
-Admin crée élève ? 201
-Matricule déjà utilisé ? 409
-Professeur crée élève ? 403
-Lecture élève autre école ? 404 ou 403
+Admin crée élève -> 201
+Matricule déjà utilisé -> 409
+Professeur crée élève -> 403
+Lecture élève autre école -> 404 ou 403
 ```
 
 ---
