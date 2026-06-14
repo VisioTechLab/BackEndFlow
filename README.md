@@ -9,7 +9,7 @@ Backend Symfony 7 — gestion scolaire MVP (RDC / EPST).
 
 ## Guides importants — Franck
 
-> Commence par le **premier guide** ci-dessous. Tu n'as pas besoin de connaître Symfony pour tester.
+> Commence par le **premier guide** ci-dessous.
 
 | | Guide | Action |
 |---|-------|--------|
