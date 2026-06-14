@@ -1,0 +1,60 @@
+services:
+  app:
+    platform: linux/amd64
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: leyisa_app
+    ports:
+      - "8000:8000"
+    volumes:
+      - .:/var/www/html
+    environment:
+      APP_ENV: dev
+      APP_SECRET: dev_secret_leyisa_local_only
+      DEFAULT_URI: http://127.0.0.1:8000
+      DATABASE_URL: mysql://root:root@database:3306/leyisa_mvp?serverVersion=8.0.36&charset=utf8mb4
+      JWT_SECRET_KEY: ChangeThisSecretKeyForLocalDevelopmentOnly1234567890
+      JWT_PUBLIC_KEY: ChangeThisSecretKeyForLocalDevelopmentOnly1234567890
+      JWT_PASSPHRASE: ""
+    depends_on:
+      database:
+        condition: service_healthy
+    restart: unless-stopped
+
+  database:
+    platform: linux/amd64
+    image: mysql:8.0
+    container_name: leyisa_database
+    ports:
+      - "3307:3306"
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: leyisa_mvp
+    volumes:
+      - leyisa_db_data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "127.0.0.1", "-uroot", "-proot"]
+      interval: 5s
+      timeout: 5s
+      retries: 15
+      start_period: 20s
+    restart: unless-stopped
+
+  phpmyadmin:
+    platform: linux/amd64
+    image: phpmyadmin:5
+    container_name: leyisa_phpmyadmin
+    ports:
+      - "8080:80"
+    environment:
+      PMA_HOST: database
+      PMA_USER: root
+      PMA_PASSWORD: root
+    depends_on:
+      database:
+        condition: service_healthy
+    restart: unless-stopped
+
+volumes:
+  leyisa_db_data:

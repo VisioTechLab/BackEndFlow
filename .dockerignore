@@ -1,0 +1,15 @@
+.git
+.gitignore
+.idea
+.vscode
+var/
+vendor/
+node_modules/
+.env.local
+.env.*.local
+*.md
+!docs/guides/INSTALLATION_DOCKER.md
+Conception/
+terminals/
+agent-tools/
+.phpunit.cache

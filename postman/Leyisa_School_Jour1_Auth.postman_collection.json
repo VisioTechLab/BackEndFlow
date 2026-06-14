@@ -1,0 +1,160 @@
+{
+	"info": {
+		"_postman_id": "leyisa-jour1-auth-collection",
+		"name": "Leyisa School Jour1 Auth",
+		"description": "Tests authentification JWT — Module Jour 1 LEYISA SCHOOL",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Login Admin",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"if (pm.response.code === 200) {",
+							"    const data = pm.response.json();",
+							"    if (data.token) {",
+							"        pm.environment.set('token', data.token);",
+							"    }",
+							"}",
+							"pm.test('Status 200', function () { pm.response.to.have.status(200); });",
+							"pm.test('Token present', function () { pm.expect(pm.response.json().token).to.be.a('string'); });"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [{ "key": "Content-Type", "value": "application/json" }],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"email\": \"{{admin_email}}\",\n  \"password\": \"{{password}}\"\n}"
+				},
+				"url": "{{base_url}}/api/login"
+			}
+		},
+		{
+			"name": "Login Direction",
+			"event": [{ "listen": "test", "script": { "exec": ["if (pm.response.code === 200) { pm.environment.set('token', pm.response.json().token); }"], "type": "text/javascript" } }],
+			"request": {
+				"method": "POST",
+				"header": [{ "key": "Content-Type", "value": "application/json" }],
+				"body": { "mode": "raw", "raw": "{\n  \"email\": \"{{direction_email}}\",\n  \"password\": \"{{password}}\"\n}" },
+				"url": "{{base_url}}/api/login"
+			}
+		},
+		{
+			"name": "Login Enseignant",
+			"event": [{ "listen": "test", "script": { "exec": ["if (pm.response.code === 200) { pm.environment.set('token', pm.response.json().token); }"], "type": "text/javascript" } }],
+			"request": {
+				"method": "POST",
+				"header": [{ "key": "Content-Type", "value": "application/json" }],
+				"body": { "mode": "raw", "raw": "{\n  \"email\": \"{{enseignant_email}}\",\n  \"password\": \"{{password}}\"\n}" },
+				"url": "{{base_url}}/api/login"
+			}
+		},
+		{
+			"name": "Login Parent",
+			"event": [{ "listen": "test", "script": { "exec": ["if (pm.response.code === 200) { pm.environment.set('token', pm.response.json().token); }"], "type": "text/javascript" } }],
+			"request": {
+				"method": "POST",
+				"header": [{ "key": "Content-Type", "value": "application/json" }],
+				"body": { "mode": "raw", "raw": "{\n  \"email\": \"{{parent_email}}\",\n  \"password\": \"{{password}}\"\n}" },
+				"url": "{{base_url}}/api/login"
+			}
+		},
+		{
+			"name": "Login Eleve",
+			"event": [{ "listen": "test", "script": { "exec": ["if (pm.response.code === 200) { pm.environment.set('token', pm.response.json().token); }"], "type": "text/javascript" } }],
+			"request": {
+				"method": "POST",
+				"header": [{ "key": "Content-Type", "value": "application/json" }],
+				"body": { "mode": "raw", "raw": "{\n  \"email\": \"{{eleve_email}}\",\n  \"password\": \"{{password}}\"\n}" },
+				"url": "{{base_url}}/api/login"
+			}
+		},
+		{
+			"name": "Login Comptable",
+			"event": [{ "listen": "test", "script": { "exec": ["if (pm.response.code === 200) { pm.environment.set('token', pm.response.json().token); }"], "type": "text/javascript" } }],
+			"request": {
+				"method": "POST",
+				"header": [{ "key": "Content-Type", "value": "application/json" }],
+				"body": { "mode": "raw", "raw": "{\n  \"email\": \"{{comptable_email}}\",\n  \"password\": \"{{password}}\"\n}" },
+				"url": "{{base_url}}/api/login"
+			}
+		},
+		{
+			"name": "Login Surveillant",
+			"event": [{ "listen": "test", "script": { "exec": ["if (pm.response.code === 200) { pm.environment.set('token', pm.response.json().token); }"], "type": "text/javascript" } }],
+			"request": {
+				"method": "POST",
+				"header": [{ "key": "Content-Type", "value": "application/json" }],
+				"body": { "mode": "raw", "raw": "{\n  \"email\": \"{{surveillant_email}}\",\n  \"password\": \"{{password}}\"\n}" },
+				"url": "{{base_url}}/api/login"
+			}
+		},
+		{
+			"name": "GET /api/me",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test('Status 200', function () { pm.response.to.have.status(200); });",
+							"pm.test('No password in response', function () {",
+							"    pm.expect(pm.response.text()).to.not.include('password');",
+							"    pm.expect(pm.response.text()).to.not.include('password_hash');",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+				"url": "{{base_url}}/api/me"
+			}
+		},
+		{
+			"name": "Test mauvais mot de passe",
+			"event": [{ "listen": "test", "script": { "exec": ["pm.test('Refuse', function () { pm.expect(pm.response.code).to.be.oneOf([401, 403]); });"], "type": "text/javascript" } }],
+			"request": {
+				"method": "POST",
+				"header": [{ "key": "Content-Type", "value": "application/json" }],
+				"body": { "mode": "raw", "raw": "{\n  \"email\": \"{{admin_email}}\",\n  \"password\": \"wrong_password\"\n}" },
+				"url": "{{base_url}}/api/login"
+			}
+		},
+		{
+			"name": "Test email inexistant",
+			"event": [{ "listen": "test", "script": { "exec": ["pm.test('Refuse', function () { pm.expect(pm.response.code).to.be.oneOf([401, 403]); });"], "type": "text/javascript" } }],
+			"request": {
+				"method": "POST",
+				"header": [{ "key": "Content-Type", "value": "application/json" }],
+				"body": { "mode": "raw", "raw": "{\n  \"email\": \"inexistant@leyisa.test\",\n  \"password\": \"{{password}}\"\n}" },
+				"url": "{{base_url}}/api/login"
+			}
+		},
+		{
+			"name": "Test /api/me sans token",
+			"event": [{ "listen": "test", "script": { "exec": ["pm.test('Refuse', function () { pm.expect(pm.response.code).to.be.oneOf([401, 403]); });"], "type": "text/javascript" } }],
+			"request": {
+				"method": "GET",
+				"url": "{{base_url}}/api/me"
+			}
+		},
+		{
+			"name": "Test /api/me token invalide",
+			"event": [{ "listen": "test", "script": { "exec": ["pm.test('Refuse', function () { pm.expect(pm.response.code).to.be.oneOf([401, 403]); });"], "type": "text/javascript" } }],
+			"request": {
+				"method": "GET",
+				"header": [{ "key": "Authorization", "value": "Bearer token_invalide_123" }],
+				"url": "{{base_url}}/api/me"
+			}
+		}
+	]
+}
