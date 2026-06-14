@@ -9,6 +9,23 @@
 /vendor/
 ###< symfony/framework-bundle ###
 
+###> docker local overrides ###
+/docker-compose.override.yml
+###< docker local overrides ###
+
+###> IDE / OS ###
+/.idea/
+/.vscode/
+/.DS_Store
+/Thumbs.db
+*.swp
+*.swo
+###< IDE / OS ###
+
+###> node (si ajout futur frontend tooling) ###
+/node_modules/
+###< node ###
+
 ###> phpunit/phpunit ###
 /phpunit.xml
 /.phpunit.cache/
