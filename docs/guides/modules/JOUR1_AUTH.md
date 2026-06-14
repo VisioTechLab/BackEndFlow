@@ -1,4 +1,6 @@
-# Module Jour 1 — Auth / Utilisateurs / Roles
+# Module Jour 1 — Auth / Utilisateurs / Rôles
+
+> Référence technique. Pour tester avec Docker et Postman, voir le [guide Franck](../franck/LANCER_DOCKER_ET_TESTER_AUTH.md).
 
 ## Endpoints
 
@@ -7,15 +9,26 @@
 | POST | `/api/login` | Public | Connexion JWT (`email`, `password`) |
 | GET | `/api/me` | Bearer JWT | Profil utilisateur connecte |
 
-## Setup local
+## Setup local (Docker — recommandé)
+
+```bash
+docker compose up -d --build
+docker compose exec app composer install
+docker compose exec app php bin/console doctrine:database:create --if-not-exists
+docker compose exec app php bin/console doctrine:migrations:migrate --no-interaction
+docker compose exec app php bin/console doctrine:fixtures:load --no-interaction
+```
+
+API : http://127.0.0.1:8000
+
+## Setup local (sans Docker — Kevin uniquement)
 
 ```bash
 composer install
-php bin/console lexik:jwt:generate-keypair --overwrite
 php bin/console doctrine:database:create --if-not-exists
 php bin/console doctrine:migrations:migrate --no-interaction
 php bin/console doctrine:fixtures:load --no-interaction
-php -S localhost:8000 -t public
+php -S 127.0.0.1:8000 -t public
 ```
 
 ## Comptes de test (dev uniquement)

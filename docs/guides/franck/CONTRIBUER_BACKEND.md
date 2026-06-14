@@ -1,5 +1,7 @@
 ﻿# Guide Backend pour Franck — LEYISA SCHOOL MVP
 
+> **Commencer par ici pour tester :** [Lancer Docker et tester l'Auth](./LANCER_DOCKER_ET_TESTER_AUTH.md)
+
 ---
 
 ## 1. Objectif du guide

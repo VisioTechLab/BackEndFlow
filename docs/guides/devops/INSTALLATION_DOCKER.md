@@ -137,4 +137,6 @@ Sans fixtures, le login échouera (aucun utilisateur). Relancez les commandes de
 
 ## Postman
 
-Voir `docs/guides/FRANCK_TEST_AUTH_POSTMAN.md` et importer les fichiers dans `postman/`.
+Guide complet pour Franck : [Lancer Docker et tester l'Auth](../franck/LANCER_DOCKER_ET_TESTER_AUTH.md)
+
+Fichiers à importer : `postman/Leyisa_School_Jour1_Auth.postman_collection.json` et `postman/Leyisa_School_Local.postman_environment.json`

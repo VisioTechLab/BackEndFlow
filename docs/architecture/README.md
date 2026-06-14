@@ -16,8 +16,8 @@ Le schema MySQL MVP se trouve dans :
 database/leyisa_mvp.sql
 ```
 
-## Prochaine etape
+## Prochaine étape
 
-Initialiser Symfony 7 et demarrer la branche `feature/module-socle` (auth JWT, TenantContext, migrations).
+Jour 1 Auth terminé (JWT, Docker, Postman). Voir [Module Jour 1 Auth](../guides/modules/JOUR1_AUTH.md).
 
-**Ne pas commencer les modules metier avant validation humaine.**
+**Ne pas commencer les modules métier avant validation humaine.**
