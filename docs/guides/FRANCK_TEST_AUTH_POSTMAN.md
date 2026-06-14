@@ -176,6 +176,19 @@ Le token a expiré ou est vide. Relance **Login Admin** avant **GET /api/me**.
 
 Vérifie que Docker Desktop est ouvert et en cours d'exécution.
 
+### Postman est lent
+
+- Utilise **`http://127.0.0.1:8000`** (pas `http://localhost:8000`)
+- Attends que Docker soit complètement démarré
+- Vérifie que MySQL est **healthy** : `docker compose ps`
+- Relance le warmup :
+  ```bash
+  docker compose exec app php bin/console cache:clear
+  docker compose exec app php bin/console cache:warmup --no-debug
+  ```
+- Le **premier** appel après démarrage peut être plus lent ; les suivants doivent être rapides
+- Si besoin : `docker compose down` puis `docker compose up -d --build`
+
 ---
 
 ## phpMyAdmin (optionnel)

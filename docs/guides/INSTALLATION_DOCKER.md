@@ -19,9 +19,29 @@ docker compose exec app php bin/console doctrine:database:create --if-not-exists
 docker compose exec app php bin/console doctrine:migrations:migrate --no-interaction
 docker compose exec app php bin/console doctrine:fixtures:load --no-interaction
 
-# 4. Vider le cache
-docker compose exec app php bin/console cache:clear
+# 4. Préchauffer le cache (automatique au démarrage, relancer si besoin)
+docker compose exec app php bin/console cache:warmup --no-debug
 ```
+
+## Performance locale (Docker)
+
+Le conteneur `app` est optimisé pour le dev local :
+
+- **OPcache activé** pour le serveur PHP intégré (`opcache.enable_cli=On`)
+- **Cache Symfony** stocké dans un volume Docker (pas sur le bind mount Windows)
+- **`vendor/`** dans un volume Docker (lecture plus rapide)
+- **`APP_DEBUG=0`** dans Docker uniquement (plus rapide, auth inchangée)
+- **bcrypt cost 4** en dev (fixtures à recharger après changement)
+
+Mesurer le temps d'une requête :
+
+```bash
+curl -w "\nTotal: %{time_total}s\n" -o NUL -s -X POST http://127.0.0.1:8000/api/login \
+  -H "Content-Type: application/json" \
+  -d "{\"email\":\"admin@leyisa.test\",\"password\":\"password123\"}"
+```
+
+Objectif après warmup : **< 500 ms** (souvent 100–300 ms).
 
 ## URLs
 
@@ -98,6 +118,22 @@ docker compose exec app php bin/console cache:clear
 ### Migrations / fixtures oubliées
 
 Sans fixtures, le login échouera (aucun utilisateur). Relancez les commandes de la section « Démarrage rapide ».
+
+### Postman ou API lent(e)
+
+- Utilisez **`http://127.0.0.1:8000`** (pas `localhost`)
+- Attendez que Docker soit complètement démarré (`docker compose ps`)
+- Vérifiez que MySQL est **healthy**
+- Relancez le warmup :
+  ```bash
+  docker compose exec app php bin/console cache:clear
+  docker compose exec app php bin/console cache:warmup --no-debug
+  ```
+- Si c'est encore lent, reconstruisez :
+  ```bash
+  docker compose down
+  docker compose up -d --build
+  ```
 
 ## Postman
 

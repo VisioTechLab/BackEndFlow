@@ -9,8 +9,12 @@ services:
       - "8000:8000"
     volumes:
       - .:/var/www/html
+      # Cache/var hors bind mount Windows — gain majeur de perf
+      - leyisa_app_var:/var/www/html/var
+      - leyisa_app_vendor:/var/www/html/vendor
     environment:
       APP_ENV: dev
+      APP_DEBUG: "0"
       APP_SECRET: dev_secret_leyisa_local_only
       DEFAULT_URI: http://127.0.0.1:8000
       DATABASE_URL: mysql://root:root@database:3306/leyisa_mvp?serverVersion=8.0.36&charset=utf8mb4
@@ -58,3 +62,5 @@ services:
 
 volumes:
   leyisa_db_data:
+  leyisa_app_var:
+  leyisa_app_vendor:
